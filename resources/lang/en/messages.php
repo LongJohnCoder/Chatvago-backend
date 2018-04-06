@@ -24,6 +24,15 @@ return [
                 'interval_name_required'        =>  'Please provide the interval name.',
                 'interval_required'             =>  'Please provide the interval.',
                 'interval_count_required'       =>  'Please provide the interval count field.',
+            ],
+
+            /**Admin messages*/
+
+            'admin'  =>  [
+                'name_required'         =>  'Please provide the admin name.',
+                'email_required'        =>  'Please provide the admin email.',
+                'email_email'           =>  'Please provide a valid email address.',
+                'email_unique'          =>  'This email has already been taken.',
             ]
         ]
     ]

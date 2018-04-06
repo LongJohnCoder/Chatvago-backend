@@ -60,6 +60,6 @@ class Kernel extends HttpKernel
         'subscribed' => \Laravel\Spark\Http\Middleware\VerifyUserIsSubscribed::class,
         'teamSubscribed' => \Laravel\Spark\Http\Middleware\VerifyTeamIsSubscribed::class,
         'superadmin' => \App\Http\Middleware\CheckSuperAdmin::class,
-        'notsuperadmin' => \App\Http\Middleware\CheckSuperAdmin::class,
+        'notsuperadmin' => \App\Http\Middleware\NotSuperUser::class,
     ];
 }

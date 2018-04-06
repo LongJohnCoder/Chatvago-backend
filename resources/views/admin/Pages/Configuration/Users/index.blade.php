@@ -9,7 +9,7 @@
 @endsection
 
 @section('title')
-    Bots
+    End Users
 @endsection
 
 
@@ -18,47 +18,57 @@
     <div class="col-sm-12 col-md-12 col-lg-12">
         <div class="card">
             <div class="card-title">
-                <h4>Bot Details</h4>
+                <h4>End User List</h4>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>#</th>
-                            <th>BOT ID</th>
-                            <th>BROADCAST TOKEN</th>
-                            <th>Status</th>
-                            <th colspan="2"><div class="text-center">Actions</div></th>
+                            <th><div class="text-center">#</div></th>
+                            <th><div class="text-center">NAME</div></th>
+                            <th><div class="text-center">EMAIL</div></th>
+                            <th><div class="text-center">Actions</div></th>
                         </tr>
                         </thead>
                         <tbody>
-                        @if(isset($bots))
-                            @forelse($bots as $bot)
+                        @if(isset($end_users))
+                            @forelse($end_users as $end_user)
                             <tr>
                                 <td>
-                                    {{$bot->id}}
+                                    <div class="text-center">
+                                        <div class="round-img">
+                                            <img src="{!! (!is_null($end_user->photo_url) && !empty($end_user->photo_url)) ? $end_user->photo_url : asset('img/avatar/common.png') !!}">
+                                        </div>
+                                    </div>
                                 </td>
-                                <td>{{$bot->bot_id}}</td>
-                                <td>{{$bot->broadcast_token}}</td>
                                 <td>
-                                    @if($bot->status == '1')
-                                        <span class="badge badge-success">Active</span>
-                                        @else
-                                        <span class="badge badge-warning">Inactive</span>
-                                    @endif
+                                    <div class="text-center">
+                                        {{$end_user->name}}
+                                    </div>
                                 </td>
-                                <td><a class="btn btn-danger delete" data-id="{{$bot->id}}">Delete</a></td>
-                                <td><a class="btn btn-info" href="{{route('bots.edit',$bot->id)}}">Edit</a></td>
+                                <td>
+                                    <div class="text-center">
+                                        {{$end_user->email}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-center">
+                                        <a class="btn btn-danger delete" data-id="{{$end_user->id}}" title="Delete User"><i class="fa fa-trash-o"></i></a>
+                                        <a class="btn btn-info" href="#" title="Edit User"><i class="fa fa-pencil"></i></a>
+                                        <a class="btn btn-info" href="#" title="Available Facebook Pages"><i class="fa fa-file-o"></i></a>
+                                        <a class="btn btn-facebook" href="{{route('facebook.redirect')}}" title="Facebook Login"><i class="fa fa-facebook"></i></a>
+                                    </div>
+                                </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6"><div class="text-center">There are no results available.</div></td>
+                                <td colspan="4"><div class="text-center">There are no results available.</div></td>
                             </tr>
                             @endforelse
                         @else
                             <tr>
-                                <td colspan="6"><div class="text-center">There are no results available.</div></td>
+                                <td colspan="4"><div class="text-center">There are no results available.</div></td>
                             </tr>
                         @endif
                         </tbody>
@@ -74,10 +84,10 @@
     <script src="{{asset('js/lib/sweetalert/sweetalert.min.js')}}"></script>
     <script>
         $('.delete').click(function () {
-            var bot_id = $(this).data('id')
+            var interval_id =   $(this).data('id');
             swal({
                     title: "Are you sure?",
-                    text: "You want to delete this particular configuration ?",
+                    text: "You want to delete this particular subscription interval?",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonClass: "btn-error",
@@ -86,9 +96,13 @@
                 },
                 function(){
                     $.ajax({
-                        url: "bots/"+bot_id,
+                        url: "intervals/"+interval_id,
                         type: 'post',
-                        data: {_method: 'delete', 'bot_id': bot_id, _token : '{{csrf_token()}}'},
+                        data: {
+                            _method: 'delete',
+                            'interval_id': interval_id,
+                            _token : '{{csrf_token()}}'
+                        },
                         success:function(response){
                             if(response.success) {
                                 swal({

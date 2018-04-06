@@ -51,4 +51,36 @@ class User extends SparkUser
         'uses_two_factor_auth' => 'boolean',
     ];
 
+    /**
+     * Lists all admin users
+     * @param $query
+     * @return mixed
+     */
+    public function scopeAdmin($query) {
+        return $query->where('role','=','2');
+    }
+
+    /**
+     * Lists all end users
+     * @param $query
+     * @return mixed
+     */
+    public function scopeEndUsers($query) {
+        return $query->where('role','=','3');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function check_end_users() {
+        return $this->hasMany('App\User','admin_id');
+    }
+
+    /**
+     * Returns the end users of an admin.
+     * @return mixed
+     */
+    public function end_users() {
+        return $this->check_end_users()->where('role','=','3');
+    }
 }

@@ -190,6 +190,9 @@
                         <li><a href="#"><i class="ti-user"></i> Profile</a></li>
                         <li><a href="#"><i class="ti-wallet"></i> Balance</a></li>
                         <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
+                        @if(Session::has('orig_user'))
+                            <li><a href="{{route('admin.switch_to_admin')}}"><i class="fa fa-sign-in"></i> Login (SuperAdmin)</a></li>
+                        @endif
                         @if(Auth::check() && Auth::user()->role != '1')
                             <li><a href="/settings"><i class="ti-settings"></i> Setting</a></li>
                         @endif

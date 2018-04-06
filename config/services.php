@@ -40,6 +40,12 @@ return [
         'week'  =>  'Weekly',
         'month' =>  'Monthly',
         'year'  =>  'Yearly'
-    ]
+    ],
+
+    'facebook' => [
+        'client_id'     => env('FACEBOOK_APP_ID'),
+        'client_secret' => env('FACEBOOK_APP_SECRET'),
+        'redirect'      => route('facebook.callback'),
+    ],
 
 ];

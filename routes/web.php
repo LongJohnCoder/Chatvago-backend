@@ -39,12 +39,18 @@ Route::group([
             'as'    =>  'settings'
         ]);
 
+        /**Login back as superadmin*/
+        Route::get('admin/return', [
+            'uses'  =>  'Admin\Configuration\AdminUserController@change_user_superadmin',
+            'as'    =>  'admin.switch_to_admin'
+        ]);
+
     });
 
     /***
      * Configuration Routes
      */
-    Route::group(['prefix' => 'config'], function () {
+    Route::group(['prefix' => 'config','middleware' => 'superadmin'], function () {
         /**
          * Configure subscriptions
          */
@@ -72,11 +78,62 @@ Route::group([
             ]
         ]);
         /**
-         * Active bots
+         * Configure admin users
          */
-        Route::get('active_Bots',[
-            'uses'  => 'Admin\Configuration\BotsController@activeBotIndex',
-            'as'    => 'bots.active.list'
+        Route::resource('admin','Admin\Configuration\AdminUserController', [
+            'names' => [
+                'index'     =>  'admin.index',
+                'create'    =>  'admin.create',
+                'store'     =>  'admin.store',
+                'edit'      =>  'admin.edit',
+                'update'    =>  'admin.update',
+                'destroy'   =>  'admin.delete'
+            ]
         ]);
+
+        /**
+         * Login as Admin user
+         */
+        Route::get('admin/change_user/{admin}',[
+            'uses'      =>  'Admin\Configuration\AdminUserController@change_user_admin',
+            'as'        =>  'admin.change_user'
+        ]);
+
+        /**
+         * List of users under an admin
+         */
+        Route::get('admin/users/{admin}',[
+            'uses'      =>  'Admin\Configuration\AdminUserController@get_users',
+            'as'        =>  'admin.users'
+        ]);
+
     });
+
+
+    /**
+     * Configure end users
+     */
+    Route::resource('endusers','Admin\Configuration\EndUserController', [
+        'names' => [
+            'index'     =>  'enduser.index',
+            'create'    =>  'enduser.create',
+            'store'     =>  'enduser.store',
+            'edit'      =>  'enduser.edit',
+            'update'    =>  'enduser.update',
+            'destroy'   =>  'enduser.delete'
+        ]
+    ]);
+
+    /**
+     * Facebook login routes
+     */
+    Route::get('/redirect', [
+        'uses'  =>  'Admin\SocialAuthFacebookController@redirect',
+        'as'    =>  'facebook.redirect'
+    ]);
+
+    Route::get('/callback', [
+        'uses'  =>  'Admin\SocialAuthFacebookController@callback',
+        'as'    =>  'facebook.callback'
+    ]);
 });

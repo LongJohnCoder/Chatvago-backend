@@ -8,7 +8,7 @@
                 <label class="control-label">Interval Name <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-3">
-                <input type="text" name="interval_name" id="interval_name" class="input-rounded form-control" placeholder="Interval-Name"  value="{{isset($interval) ? $interval->name : old('interval_name') }}" required>
+                <input type="text" name="interval_name" id="interval_name" class="input-rounded form-control" placeholder="Interval-Name"  value="{{isset($interval) ? $interval->name : old('interval_name') }}">
                 <small class="form-control-feedback"> Custom Interval Name. </small>
             </div>
             @if((isset($errors) && $errors->has('interval_name')))
@@ -27,7 +27,7 @@
                 <label class="control-label">Interval <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-3">
-                <select name="interval" id="interval" class="input-rounded form-control" required>
+                <select name="interval" id="interval" class="input-rounded form-control" >
                     <option value="">----Select----</option>
                     @foreach($plan_intervals as $key => $plan_interval)
                      <option value="{{$key}}" data-interval="{{$key}}" @if(isset($interval) && $interval->interval == $key){{'selected'}}@endif>{{$plan_interval}}</option>
@@ -50,7 +50,7 @@
                 <label class="control-label">Interval Count  <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-3">
-                <select name="interval_count" id="interval_count" class="input-rounded form-control" required>
+                <select name="interval_count" id="interval_count" class="input-rounded form-control" >
                     <option value="">----Select----</option>
                 </select>
             </div>

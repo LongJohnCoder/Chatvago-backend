@@ -13,12 +13,14 @@
                     </ul>
                 </li>
                 <li class="nav-label">Configuration</li>
+                @if(Auth::check() && Auth::user()->role == '1')
+                <li>
+                    <a href="{{route('admin.index')}}"><i class="fa fa-star"></i><span class="hide-menu">Admins </span></a>
+                </li>
+                @endif
                 <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-envelope"></i><span class="hide-menu">Users  <span class="label label-rouded label-primary pull-right">2</span></span></a>
                     <ul aria-expanded="false" class="collapse">
-                        @if(Auth::check() && Auth::user()->role == '1')
-                            <li><a href="#">Admin Users</a></li>
-                        @endif
-                        <li><a href="#">Active Users </a></li>
+                        <li><a href="{{route('enduser.index')}}">Active Users </a></li>
                         <li><a href="#">Active Bots</a></li>
                     </ul>
                 </li>

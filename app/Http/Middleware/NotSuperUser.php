@@ -17,7 +17,7 @@ class NotSuperUser
     public function handle($request, Closure $next)
     {
         $user = Auth::user();
-        if (isset($user) && !is_null($user) && $user->role != '1') {
+        if (isset($user) && !is_null($user) && $user->role == '1') {
             return redirect()->route('admin.dashboard');
         }
         return $next($request);
