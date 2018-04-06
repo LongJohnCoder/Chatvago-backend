@@ -29,6 +29,12 @@
                         <li><a href="{{route('subscriptions.index')}}">Available Subscriptions</a></li>
                     </ul>
                 </li>
+                <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-newspaper-o"></i><span class="hide-menu">Subscription Plan Intervals</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a href="{{route('intervals.create')}}">Create Plan Intervals</a></li>
+                        <li><a href="{{route('intervals.index')}}">Available Plan Intervals</a></li>
+                    </ul>
+                </li>
                 @endif
                 <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span class="hide-menu">Charts</span></a>
                     <ul aria-expanded="false" class="collapse">

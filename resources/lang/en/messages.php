@@ -3,6 +3,9 @@
 return [
     'errors'  => [
         'configuration' =>  [
+            
+            /**Subscription messages*/
+            
             'subscription'  =>  [
                 'plan_name_required'            =>  'Please provide the plan name.',
                 'plan_id_required'              =>  'Please provide the plan id.',
@@ -13,6 +16,14 @@ return [
                 'profile_creation_integer'      =>  'Please provide a valid input for this field.',
                 'pages_per_user_required'       =>  'Please provide the number of pages that can be associated with a user.',
                 'pages_per_user_integer'        =>  'Please provide a valid input for this field.',
+            ],
+            
+            /**Subscription Intervals messages*/
+            
+            'intervals'  =>  [
+                'interval_name_required'        =>  'Please provide the interval name.',
+                'interval_required'             =>  'Please provide the interval.',
+                'interval_count_required'       =>  'Please provide the interval count field.',
             ]
         ]
     ]

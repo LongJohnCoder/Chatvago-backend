@@ -46,7 +46,7 @@ Route::group([
      */
     Route::group(['prefix' => 'config'], function () {
         /**
-         * Configure bots
+         * Configure subscriptions
          */
         Route::resource('subscriptions','Admin\Configuration\SubscriptionController', [
             'names' => [
@@ -56,6 +56,19 @@ Route::group([
                 'edit'      =>  'subscriptions.edit',
                 'update'    =>  'subscriptions.update',
                 'destroy'   =>  'subscriptions.delete'
+            ]
+        ]);
+        /**
+         * Configure subscription plan intervals
+         */
+        Route::resource('intervals','Admin\Configuration\PlanIntervalController', [
+            'names' => [
+                'index'     =>  'intervals.index',
+                'create'    =>  'intervals.create',
+                'store'     =>  'intervals.store',
+                'edit'      =>  'intervals.edit',
+                'update'    =>  'intervals.update',
+                'destroy'   =>  'intervals.delete'
             ]
         ]);
         /**

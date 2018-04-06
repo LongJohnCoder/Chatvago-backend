@@ -51,12 +51,14 @@ class SparkServiceProvider extends ServiceProvider
     public function booted()
     {
 
-        Spark::useStripe()->noCardUpFront()->trialDays(10);
+       /* Spark::useStripe()->noCardUpFront()->trialDays(10);
 
         Spark::freePlan()
             ->features([
                 'First', 'Second', 'Third'
-            ]);
+            ]);*/
+
+        //Spark::useStripe()->trialDays(10);
 
         Spark::plan('Basic', 'basic-plan-1')
             ->price(9.99)

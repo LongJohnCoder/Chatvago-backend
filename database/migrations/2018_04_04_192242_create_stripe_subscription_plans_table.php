@@ -18,11 +18,11 @@ class CreateStripeSubscriptionPlansTable extends Migration
             $table->string('plan_name');
             $table->string('plan_id');
             $table->string('plan_price');
-            $table->string('plan_interval');
+            $table->integer('plan_interval');
             $table->string('plan_features');
-            $table->integer('profile_creation');
-            $table->integer('page_creation_per_profile');
-            $table->boolean('avail_broadcast');
+            $table->integer('profile_creation')->default(0);
+            $table->integer('page_creation_per_profile')->default(0);
+            $table->boolean('avail_broadcast')->default(0)->comment('0 => Off, 1 => On');
             $table->timestamps();
             $table->softDeletes();
         });

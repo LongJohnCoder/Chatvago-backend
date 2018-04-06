@@ -35,4 +35,11 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'stripe_plans'  =>  [
+        'day'   =>  'Daily',
+        'week'  =>  'Weekly',
+        'month' =>  'Monthly',
+        'year'  =>  'Yearly'
+    ]
+
 ];

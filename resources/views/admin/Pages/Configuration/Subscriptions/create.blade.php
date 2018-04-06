@@ -9,7 +9,7 @@
 @endsection
 
 @section('title')
-    Configure New Bot
+    Configure New Subscription Plan
 @endsection
 
 
@@ -31,23 +31,3 @@
     </div>
 @endsection
 
-
-@section('scripts')
-    <script src="{{asset('js/lib/bootstrap-toggle/toggle.min.js')}}"></script>
-    <script>
-        $(document).ready(function () {
-            $('#status').bootstrapSwitch('state','1');
-        });
-
-        $('#status').bootstrapSwitch({
-            size: 'small',
-            onText: 'Enable',
-            offText: 'Disable',
-            onColor: 'success',
-            offColor: 'danger',
-            onSwitchChange: function(event, state) {
-                $('#status').val(state ? '1' : '0').change();
-            }
-        });
-    </script>
-@endsection

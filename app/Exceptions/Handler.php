@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Foundation\Testing\HttpException;
+use Illuminate\Database\QueryException;
 
 class Handler extends ExceptionHandler
 {
@@ -48,11 +49,21 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if($exception instanceof HttpException) {
+
             return response()->view('errors.error',[
                 'code' => $exception ->getCode(),
                 'message' => $exception ->getMessage()
             ] , ($exception->getCode() != 0) ? $exception->getCode() : 500 );
+
+        } else if($exception instanceof QueryException) {
+
+            return response()->view('errors.error',[
+                'code' => $exception ->getCode(),
+                'message' => $exception ->getMessage()
+            ] , ($exception->getCode() != 0) ? $exception->getCode() : 500 );
+
         }
+
         return parent::render($request, $exception);
     }
 }

@@ -23,14 +23,26 @@ class SubscriptionRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'plan_name'         =>  'required',
-            'plan_id'           =>  'required',
-            'plan_price'        =>  'required|numeric',
-            'plan_interval'     =>  'required',
-            'profile_creation'  =>  'required|integer',
-            'pages_per_user'    =>  'required|integer'
-        ];
+
+        if((isset($this->edit) && $this->edit == '0')){
+
+            return [
+                'plan_name'         =>  'required',
+                'plan_id'           =>  'required',
+                'plan_price'        =>  'required|numeric',
+                'plan_interval'     =>  'required',
+                'profile_creation'  =>  'required|integer',
+                'pages_per_user'    =>  'required|integer'
+            ];
+
+        } else {
+
+            return [
+                'plan_name'         =>  'required',
+                'profile_creation'  =>  'required|integer',
+                'pages_per_user'    =>  'required|integer'
+            ];
+        }
     }
 
     /**

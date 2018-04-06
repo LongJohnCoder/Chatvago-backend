@@ -15,7 +15,12 @@ class CreateStripeSubscriptionPlanIntervalsTable extends Migration
     {
         Schema::create('stripe_subscription_plan_intervals', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name')->default('custom');
+            $table->string('interval');
+            $table->string('interval_count');
+            $table->boolean('is_editable')->default(1)->comment('0 => No, 1 => Yes');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

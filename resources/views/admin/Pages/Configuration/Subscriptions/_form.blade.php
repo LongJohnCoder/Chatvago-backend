@@ -8,7 +8,7 @@
                 <label class="control-label">Plan Name  <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-6">
-                <input type="text" name="plan_name" id="plan_name" class="input-rounded form-control" placeholder="Plan-Name" value="{{isset($bot) ? $bot->bot_id : old('bot_id') }}">
+                <input type="text" name="plan_name" id="plan_name" class="input-rounded form-control" placeholder="Plan-Name" required value="{{isset($subscription_plan) ? $subscription_plan->plan_name : old('plan_name') }}">
                 <small class="form-control-feedback"> Your Stripe Plan Name. </small>
             </div>
             @if((isset($errors) && $errors->has('plan_name')))
@@ -27,7 +27,7 @@
                 <label class="control-label">Plan ID  <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-6">
-                <input type="text" name="plan_id" id="plan_id" class="input-rounded form-control" placeholder="Plan-ID" value="{{isset($bot) ? $bot->bot_id : old('bot_id') }}">
+                <input type="text" name="plan_id" id="plan_id" class="input-rounded form-control" placeholder="Plan-ID" required  value="{{isset($subscription_plan) ? $subscription_plan->plan_id : old('plan_id') }}" @if(isset($edit) && $edit == '1'){{'readOnly'}}@endif>
                 <small class="form-control-feedback"> Your Stripe Plan ID. </small>
             </div>
             <div class="col-md-1">
@@ -48,11 +48,11 @@
     <div class="form-group {{(isset($errors) && $errors->has('plan_price')) ? 'has-error' : ''}}">
         <div class="row p-t-20">
             <div class="col-md-2">
-                <label class="control-label"> Your Stripe Plan Price  <span class="text-danger">*</span> : </label>
+                <label class="control-label">Plan Price  <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-6">
-                <input type="text" name="plan_price" id="plan_price" class="input-rounded form-control" placeholder="Plan-Price" value="{{isset($bot) ? $bot->bot_id : old('bot_id') }}">
-                <small class="form-control-feedback"> Plan Price in dollars ($). </small>
+                <input type="number" name="plan_price" id="plan_price" min="0" step="0.01" class="input-rounded form-control" placeholder="Plan-Price" required  value="{{isset($subscription_plan) ? $subscription_plan->plan_price : old('plan_price') }}" @if(isset($edit) && $edit == '1'){{'disabled'}}@endif>
+                <small class="form-control-feedback"> Your Stripe Plan Price in dollars ($). </small>
             </div>
             @if((isset($errors) && $errors->has('plan_price')))
                 <div class="col-md-4 text-danger">
@@ -70,9 +70,11 @@
                 <label class="control-label"> Your Stripe Plan Interval <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-6">
-                <select name="plan_interval" class="input-rounded form-control">
+                <select name="plan_interval" class="input-rounded form-control" required @if(isset($edit) && $edit == '1'){{'disabled'}}@endif>
                     <option value="">-----Select-----</option>
-                    <option value="1">1</option>
+                    @foreach($intervals as $key => $interval)
+                        <option value="{{$key}}" @if(isset($subscription_plan) && $subscription_plan->plan_interval == $key){{'selected'}}@endif>{{$interval}}</option>
+                    @endforeach
                 </select>
                 <small class="form-control-feedback"> Stripe Plan Interval. </small>
             </div>
@@ -93,7 +95,7 @@
                 <label class="control-label">Maximum User Profiles  <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-6">
-                <input type="text" name="profile_creation" id="profile_creation" class="input-rounded form-control" value="{{isset($bot) ? $bot->broadcast_token : old('broadcast_token') }}">
+                <input type="number" name="profile_creation" id="profile_creation" class="input-rounded form-control" min="0" required  value="{{isset($subscription_plan) ? $subscription_plan->profile_creation : old('profile_creation') }}">
                 <small class="form-control-feedback"> Maximum number of user profiles that can be created with the plan. </small>
             </div>
             @if((isset($errors) && $errors->has('profile_creation')))
@@ -112,7 +114,7 @@
                 <label class="control-label">Pages Per User  <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-6">
-                <input type="text" name="pages_per_user" id="pages_per_user" class="input-rounded form-control" value="{{isset($bot) ? $bot->broadcast_token : old('broadcast_token') }}">
+                <input type="number" name="pages_per_user" id="pages_per_user" class="input-rounded form-control" min="0" required  value="{{isset($subscription_plan) ? $subscription_plan->page_creation_per_profile : old('pages_per_user') }}">
                 <small class="form-control-feedback"> Maximum number of pages a user can be associated with the plan. </small>
             </div>
             @if((isset($errors) && $errors->has('pages_per_user')))
@@ -131,7 +133,7 @@
                 <label class="control-label">Avail Broadcast  <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-6">
-                <input type="checkbox" name="avail_broadcast" id="avail_broadcast" value="{{isset($bot) ? $bot->broadcast_token : old('broadcast_token') }}">
+                <input type="checkbox" name="avail_broadcast" id="avail_broadcast" value="1" @if(isset($subscription_plan) && $subscription_plan->avail_broadcast == '1') {{'checked'}} @endif >
                 <small class="form-control-feedback"> Whether to avail broadcast messaging feature for the users. </small>
             </div>
             @if((isset($errors) && $errors->has('avail_broadcast')))
@@ -146,6 +148,7 @@
 
 </div>
 <div class="form-actions">
+    <input type="hidden" value="{{$edit}}" name="edit">
     <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i>{{(isset($edit) && $edit == '1') ? 'Update': 'Save'}} </button>
-    <button type="button" class="btn btn-inverse">Cancel</button>
+    <a class="btn btn-inverse" href="{{route('subscriptions.index')}}">Cancel</a>
 </div>

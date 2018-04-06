@@ -23,7 +23,7 @@
                 <div class="card-body">
                     <form action="{{route('bots.store')}}" method="post">
                         {{ csrf_field() }}
-                        @include('admin.pages.Configuration.Bots._form',['edit' => 0])
+                        @include('admin.Pages.Configuration.Bots._form',['edit' => 0])
                     </form>
                 </div>
             </div>

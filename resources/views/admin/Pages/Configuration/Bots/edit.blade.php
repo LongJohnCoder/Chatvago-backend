@@ -24,7 +24,7 @@
                     <form action="{{route('bots.update',$bot->id)}}" method="post">
                         {{ csrf_field() }}
                         @method('PUT')
-                        @include('admin.pages.Configuration.Bots._form',['edit' => 1,'bot' => $bot])
+                        @include('admin.Pages.Configuration.Bots._form',['edit' => 1,'bot' => $bot])
                     </form>
                 </div>
             </div>
