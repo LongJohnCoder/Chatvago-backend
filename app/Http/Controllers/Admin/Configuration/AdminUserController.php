@@ -82,7 +82,7 @@ class AdminUserController extends Controller
     {
         try{
 
-            $admin = User::admin()->findOrFail($id);
+            $admin = User::findOrFail($id);
             return view('admin.Pages.Configuration.Admin_Users.edit',compact('admin'));
 
         } catch (Exception $exception) {
@@ -113,12 +113,7 @@ class AdminUserController extends Controller
     {
         try{
 
-            $this->validate($request,[
-                'name'  => 'required',
-                'email' =>  'required|email|unique:users,email,'.$id
-            ]);
-
-            $admin            = User::admin()->findOrFail($id);
+            $admin            = User::findOrFail($id);
             $admin->name      = $request->name;
             $admin->email     = $request->email;
             $admin->update();
