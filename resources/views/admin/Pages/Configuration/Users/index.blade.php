@@ -32,45 +32,45 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @if(isset($end_users))
-                            @forelse($end_users as $end_user)
-                            <tr>
-                                <td>
-                                    <div class="text-center">
-                                        <div class="round-img">
-                                            <img src="{!! (!is_null($end_user->photo_url) && !empty($end_user->photo_url)) ? $end_user->photo_url : asset('img/avatar/common.png') !!}">
+                        @if(isset($end_users))   
+                          @forelse($end_users as $end_user)
+                                <tr>
+                                    <td>
+                                        <div class="text-center">
+                                            <div class="round-img">
+                                                <img src="{!! (!is_null($end_user->photo_url) && !empty($end_user->photo_url)) ? $end_user->photo_url : asset('img/avatar/common.png') !!}">
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        {{$end_user->name}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        {{$end_user->email}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <a class="btn btn-danger delete" data-id="{{$end_user->id}}" title="Delete User"><i class="fa fa-trash-o"></i></a>
-                                        <a class="btn btn-info" href="#" title="Edit User"><i class="fa fa-pencil"></i></a>
-                                        <a class="btn btn-info" href="#" title="Available Facebook Pages"><i class="fa fa-file-o"></i></a>
-                                        <a class="btn btn-facebook" href="{{route('facebook.redirect')}}" title="Facebook Login"><i class="fa fa-facebook"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td>
+                                        <div class="text-center">
+                                            {{$end_user->name}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="text-center">
+                                            {{$end_user->email}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="text-center">
+                                            <a class="btn btn-danger delete" data-id="{{$end_user->id}}" title="Delete User"><i class="fa fa-trash-o"></i></a>
+                                            <a class="btn btn-info" href="{{route('enduser.edit',$end_user->id)}}" title="Edit User"><i class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-info" href="#" title="Available Facebook Pages"><i class="fa fa-file-o"></i></a>
+                                            <a class="btn btn-facebook" href="{{route('facebook.redirect')}}" title="Facebook Login"><i class="fa fa-facebook"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
                             @empty
-                            <tr>
-                                <td colspan="4"><div class="text-center">There are no results available.</div></td>
-                            </tr>
+                                <tr>
+                                    <td colspan="4"><div class="text-center">There are no results available.</div></td>
+                                </tr>
                             @endforelse
-                        @else
+                        @else 
                             <tr>
                                 <td colspan="4"><div class="text-center">There are no results available.</div></td>
                             </tr>
-                        @endif
+                        @endif    
                         </tbody>
                     </table>
                 </div>
@@ -84,10 +84,10 @@
     <script src="{{asset('js/lib/sweetalert/sweetalert.min.js')}}"></script>
     <script>
         $('.delete').click(function () {
-            var interval_id =   $(this).data('id');
+            var enduser_id =   $(this).data('id');
             swal({
                     title: "Are you sure?",
-                    text: "You want to delete this particular subscription interval?",
+                    text: "You want to delete this particular end user?",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonClass: "btn-error",
@@ -96,11 +96,11 @@
                 },
                 function(){
                     $.ajax({
-                        url: "intervals/"+interval_id,
+                        url: "endusers/"+enduser_id,
                         type: 'post',
                         data: {
                             _method: 'delete',
-                            'interval_id': interval_id,
+                            'enduser_id': enduser_id,
                             _token : '{{csrf_token()}}'
                         },
                         success:function(response){

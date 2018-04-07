@@ -9,7 +9,7 @@
 @endsection
 
 @section('title')
-    Configure New Subscription Plan Interval
+    Users
 @endsection
 
 
@@ -18,12 +18,12 @@
         <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="card card-outline-primary">
                 <div class="card-header">
-                    <h4 class="m-b-0 text-white">Configure New Subscription Plan Interval</h4>
+                    <h4 class="m-b-0 text-white">Create New End User</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{route('intervals.store')}}" method="post">
+                    <form action="{{route('enduser.store')}}" method="post">
                         {{ csrf_field() }}
-                        @include('admin.Pages.Configuration.Plan_Intervals._form',['edit' => 0])
+                        @include('admin.Pages.Configuration.Users._form',['edit' => 0])
                     </form>
                 </div>
             </div>

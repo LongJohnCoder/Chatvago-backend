@@ -2,9 +2,16 @@
 
 namespace App\Http\Controllers\Admin\Configuration;
 
-use Illuminate\Http\Request;
+use App\StripeSubscriptionPlan;
+
+
+use App\Http\Requests\Configuration\EndUserRequest; 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 use App\User;
+use Mail;
+use Auth;
 
 class EndUserController extends Controller
 {
@@ -17,7 +24,8 @@ class EndUserController extends Controller
     {
         try{
 
-            $end_users = User::endUsers()->get();
+            $auth_user = Auth::user();
+            $end_users = (!is_null($auth_user) && $auth_user->role == '1') ? User::endUsers()->get() : $auth_user->end_users()->get() ;
             return view('admin.Pages.Configuration.Users.index',compact('end_users'));
 
         } catch (Exception $exception) {
@@ -44,18 +52,43 @@ class EndUserController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.Pages.Configuration.Users.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Request\Configuration\EndUserRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EndUserRequest $request)
     {
-        //
+            $this->check_user_count();
+
+
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->admin_id = Auth::id();
+            $user->role = '3';
+            $user->save();
+
+            Mail::send('admin.Pages.Configuration.Users.enduserCreate',['email' => $request->email,'password' => $user->password,'name'=>$request->name],
+            function($message) use($request) {
+            $message->from('work@tier5.us','ChatVago');
+            $message->to($request->email)->subject('End user created');
+          });
+
+          dd("Check your email wait 30 minutes before requesting again ");
+    }
+
+    protected function check_user_count()
+    {
+        $check = Auth::user()->subscriptions;
+        dd($check);
+        $check_plan = !is_null($check) ? $check->stripe_subscription_plan : [];
+        dd($check_plan);
     }
 
     /**
@@ -77,7 +110,28 @@ class EndUserController extends Controller
      */
     public function edit($id)
     {
-        //
+       
+        try{
+
+            $end_users = User::findOrFail($id);
+            return view('admin.Pages.Configuration.Users.edit',compact('end_users'));
+
+        } catch (Exception $exception) {
+
+            return view('errors.error',[
+                'code' => $exception->getCode(),
+                'message' => $exception->getMessage()
+            ]);
+
+        } catch (ModelNotFoundException $model_not_found) {
+
+            return view('errors.error',[
+                'code' => $model_not_found->getCode(),
+                'message' => $model_not_found->getMessage()
+            ]);
+
+        }
+
     }
 
     /**
@@ -98,8 +152,37 @@ class EndUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+       
+        try {
+
+            $end_users  = User::findOrFail($request->enduser_id);
+            $end_users->delete();
+
+            return response()->json([
+                'success'       => true,
+                'message'       => 'Successfully deleted the admin.'
+            ],200);
+
+
+        } catch (Exception $exception) {
+
+            return response()->json([
+                'success'       => false,
+                'code'          => $exception->getCode(),
+                'message'       => $exception->getMessage()
+            ],($exception->getCode() != 0) ? $exception->getCode() : 500);
+
+        } catch (ModelNotFoundException $modelNotFound) {
+
+            return response()->json([
+                'success'       => false,
+                'code'          => $modelNotFound->getCode(),
+                'message'       => $modelNotFound->getMessage()
+            ],($modelNotFound->getCode() != 0) ? $modelNotFound->getCode() : 500);
+        }
+
     }
+
 }

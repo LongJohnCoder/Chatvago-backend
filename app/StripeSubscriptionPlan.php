@@ -15,4 +15,13 @@ class StripeSubscriptionPlan extends Model
     public function interval(){
         return $this->hasOne('App\StripeSubscriptionPlanInterval','id','plan_interval');
     }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function stripe_subscription()
+    {
+        return $this->hasMany('StripeSubscription', 'stripe_plan' , 'plan_id');
+    }
 }
