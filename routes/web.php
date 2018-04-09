@@ -146,17 +146,21 @@ Route::group([
 
     });
 
-
     /**
      * Facebook login routes
      */
-    Route::get('/redirect', [
-        'uses'  =>  'Admin\SocialAuthFacebookController@redirect',
-        'as'    =>  'facebook.redirect'
-    ]);
 
-    Route::get('/callback', [
-        'uses'  =>  'Admin\SocialAuthFacebookController@callback',
-        'as'    =>  'facebook.callback'
-    ]);
+    Route::group(['prefix' => 'facebook'],function() {
+
+        Route::get('redirect', [
+            'uses'  =>  'Admin\SocialAuthFacebookController@redirect',
+            'as'    =>  'facebook.redirect'
+        ]);
+
+        Route::get('callback', [
+            'uses'  =>  'Admin\SocialAuthFacebookController@callback',
+            'as'    =>  'facebook.callback'
+        ]);
+    });
+
 });

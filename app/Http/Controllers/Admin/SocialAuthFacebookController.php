@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Socialite;
-use App\Services\SocialFacebookAccountService;
+use SammyK\LaravelFacebookSdk\LaravelFacebookSdk;
+use Facebook\Exceptions\FacebookSDKException;
 
 class SocialAuthFacebookController extends Controller
 {
@@ -14,9 +14,10 @@ class SocialAuthFacebookController extends Controller
     *
     * @return void
     */
-    public function redirect()
+    public function redirect(LaravelFacebookSdk $fb)
     {
-        return Socialite::driver('facebook')->redirect();
+        $login_link = $fb->getLoginUrl();
+        return redirect()->to($login_link);
     }
 
     /**
@@ -24,8 +25,13 @@ class SocialAuthFacebookController extends Controller
      *
      * @return callback URL from facebook
      */
-    public function callback(SocialFacebookAccountService $service)
+    public function callback(LaravelFacebookSdk $fb)
     {
-        $user = $service->createOrGetUser(Socialite::driver('facebook')->user());
+        try {
+            $token = $fb->getAccessTokenFromRedirect();
+        } catch (FacebookSDKException $e) {
+            // Failed to obtain access token
+            dd($e->getMessage());
+        }
     }
 }

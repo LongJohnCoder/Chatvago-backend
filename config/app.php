@@ -167,7 +167,6 @@ return [
          * Custom Service Providers
          */
         Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
-        Laravel\Socialite\SocialiteServiceProvider::class,
 
     ],
 
@@ -218,7 +217,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,
-        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Facebook' => SammyK\LaravelFacebookSdk\FacebookFacade::class,
     ],
 
     'superadmin'    =>  [
