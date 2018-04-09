@@ -42,9 +42,7 @@ return [
                 'email_required'                     =>  'Please provide the end user email.',
                 'email_email'                        =>  'Please provide a valid email address.',
                 'email_unique'                       =>  'This email has already been taken.',
-                'password_required'                  =>  'Please provide a password.',
-                'confirm_password_required'          =>  'Please confirm the password.',
-                'confirm_password_same'              =>  'Password and confirm password should match.',
+                'admin_users_required'               =>  'Please provide an admin user.'
             ]
         ]
     ]

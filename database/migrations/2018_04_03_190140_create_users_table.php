@@ -17,7 +17,8 @@ class CreateUsersTable extends Migration
             $table->bigInteger('admin_id')->nullable();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password', 60);
+            $table->string('password', 60)->nullable();
+            $table->string('login_token',64)->nullable();
             $table->rememberToken();
             $table->enum('role',['1','2','3'])->default('2')->comment('1 => Super Admin, 2 => Admin, 3 => Endusers');
             $table->text('photo_url')->nullable();

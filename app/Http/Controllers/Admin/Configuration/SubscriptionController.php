@@ -181,7 +181,7 @@ class SubscriptionController extends Controller
      * @param $request
      */
     protected function createStripeFeature($request) {
-        $feature = 'Total User Profiles : '.$request->profile_creation.',Total Pages : '.$request->pages_per_user.',Broadcasting : '.(isset($request->avail_broadcast) ?  "On" : "Off");
+        $feature = 'Total User Profiles : '.$request->profile_creation.',Total Pages Per User : '.$request->pages_per_user.',Broadcasting : '.(isset($request->avail_broadcast) ?  "On" : "Off");
         return $feature;
     }
 

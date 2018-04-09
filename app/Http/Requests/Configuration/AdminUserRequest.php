@@ -25,7 +25,7 @@ class AdminUserRequest extends FormRequest
     {
         return [
             'name'  => 'required',
-            'email' =>  'required|email|unique:users,email,'.$this->id
+            'email' =>  'required|email|unique:users,email,'.base64_decode($this->admin_id)
         ];
     }
     /**

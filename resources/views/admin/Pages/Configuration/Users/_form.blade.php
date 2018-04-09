@@ -8,7 +8,7 @@
                 <label class="control-label">Full Name  <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-5">
-                <input type="text" name="name" id="name" class="input-rounded form-control" placeholder="Enter Full name" value="{{isset($end_users) ? $end_users->name : old('name') }}">
+                <input type="text" name="name" id="name" class="input-rounded form-control" placeholder="Full-Name" value="{{isset($end_users) ? $end_users->name : old('name') }}" required>
                 <small class="form-control-feedback"> User Full Name as in Facebook. </small>
             </div>
             @if((isset($errors) && $errors->has('name')))
@@ -27,7 +27,7 @@
                 <label class="control-label">Email Id  <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-5">
-                <input type="email" name="email" id="email" class="input-rounded form-control" placeholder="Enter Email Id" value="{{isset($end_users) ? $end_users->email : old('email') }}">
+                <input type="email" name="email" id="email" class="input-rounded form-control" placeholder="Email" value="{{isset($end_users) ? $end_users->email : old('email') }}" required>
                 <small class="form-control-feedback"> User Email Id. </small>
             </div>
             @if((isset($errors) && $errors->has('email')))
@@ -39,45 +39,38 @@
     </div>
     <!-- form-group -->
 
+    @if(isset($super_admin_flag) && $super_admin_flag)
     <!-- form-group -->
-    <div class="form-group {{(isset($errors) && $errors->has('password')) ? 'has-error' : ''}}">
+    <div class="form-group {{(isset($errors) && $errors->has('admin_users')) ? 'has-error' : ''}}">
         <div class="row p-t-20">
             <div class="col-md-3">
-                <label class="control-label">Password  <span class="text-danger">*</span> : </label>
+                <label class="control-label">Admin user:  <span class="text-danger">*</span> : </label>
             </div>
             <div class="col-md-5">
-                <input type="password" name="password" id="password" class="input-rounded form-control" placeholder="Enter strong Password">
-                <small class="form-control-feedback"> User Password. </small>
+                <select class="input-rounded form-control" name="admin_users" required>
+                    <option value="">----Select----</option>
+                    @isset($super_admin_users)
+                        @foreach($super_admin_users as $key => $super_admin_user)
+                        <option value="{{$key}}">{{$super_admin_user}}</option>
+                        @endforeach
+                    @endisset
+                </select>
             </div>
-            @if((isset($errors) && $errors->has('password')))
+            @if((isset($errors) && $errors->has('admin_users')))
                 <div class="col-md-4 text-danger">
-                    <span><i class="fa fa-times-circle"></i>{{$errors->first('password')}}</span>
+                    <span><i class="fa fa-times-circle"></i>{{$errors->first('admin_users')}}</span>
                 </div>
             @endif
         </div>
     </div>
     <!-- form-group -->
+    @endif
 
-    <!-- form-group -->
-    <div class="form-group {{(isset($errors) && $errors->has('confirm_password')) ? 'has-error' : ''}}">
-        <div class="row p-t-20">
-            <div class="col-md-3">
-                <label class="control-label">Confirm Password  <span class="text-danger">*</span> : </label>
-            </div>
-            <div class="col-md-5">
-                <input type="password" name="confirm_password" id="confirm_password" class="input-rounded form-control" placeholder="Enter strong Password">
-                <small class="form-control-feedback"> Confirm Password will be the same as Password. </small>
-            </div>
-            @if((isset($errors) && $errors->has('confirm_password')))
-                <div class="col-md-4 text-danger">
-                    <span><i class="fa fa-times-circle"></i>{{$errors->first('confirm_password')}}</span>
-                </div>
-            @endif
-        </div>
-    </div>
-    <!-- form-group -->
 </div>
 <div class="form-actions">
+    <input type="hidden" value="{{(isset($super_admin_flag) && $super_admin_flag) ? '1' : '0'}}" name="super_admin_flag">
+    <input type="hidden" value="{{(isset($end_users)) ? base64_encode($end_users->id) : '0'}}" name="end_user_id">
+    <input type="hidden" value="{{(isset($edit)) ? $edit : '0'}}" name="edit">
     <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i>{{(isset($edit) && $edit == '1') ? 'Update': 'Create'}} </button>
     <button type="button" class="btn btn-inverse">Cancel</button>
 </div>

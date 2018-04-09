@@ -23,12 +23,16 @@ class EndUserRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name'              => 'required',
-            'email'             => 'required|email|unique:users,email'.(isset($this->edit) && $this->edit == '1' ? ','.$this->end_user_id : '' ),
-            'password'          => 'required',
-            'confirm_password'   => 'required|same:password'
+        $rules = [
+            'name'                  => 'required',
+            'email'                 => 'required|email|unique:users,email'.(isset($this->edit) && $this->edit == '1' ? ','.base64_decode($this->end_user_id) : '' )
         ];
+        
+        if($this->super_admin_flag == '1') {
+            $rules['admin_users']   =  'required';
+        }
+
+        return $rules;
     }
 
     /**
@@ -43,10 +47,7 @@ class EndUserRequest extends FormRequest
             'email.required'                =>  trans('messages.errors.configuration.end_user.email_required'),
             'email.email'                   =>  trans('messages.errors.configuration.end_user.email_email'),
             'email.unique'                  =>  trans('messages.errors.configuration.end_user.email_unique'),
-            'password.required'               =>  trans('messages.errors.configuration.end_user.password_required'),
-            'confirmPassword.required'        =>  trans('messages.errors.configuration.end_user.confirm_password_required'),
-            'confirmPassword.same'          =>  trans('messages.errors.configuration.end_user.confirm_password_same'),
-
+            'admin_users.required'          =>  trans('messages.errors.configuration.end_user.admin_users_required')
         ];
     }
 }

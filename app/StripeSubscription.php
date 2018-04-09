@@ -3,10 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Cashier\Subscription as CashierSubscription;
 
-class StripeSubscription extends CashierSubscription
+class StripeSubscription extends Model
 {
+    protected $table = 'subscriptions';
 	 /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -20,6 +20,6 @@ class StripeSubscription extends CashierSubscription
      */
     public function stripe_subscription_plan()
     {
-        return $this->belongsTo('StripeSubscriptionPlan', 'plan_id');
+        return $this->belongsTo('App\StripeSubscriptionPlan', 'plan_id');
     }
 }

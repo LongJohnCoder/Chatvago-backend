@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers\Admin\Configuration;
 
-use App\StripeSubscriptionPlan;
-
-
 use App\Http\Requests\Configuration\EndUserRequest; 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\User;
 use Mail;
@@ -52,43 +48,105 @@ class EndUserController extends Controller
      */
     public function create()
     {
-        return view('admin.Pages.Configuration.Users.create');
+        try {
+
+            $auth_user = Auth::user();
+            $super_admin_flag = (!is_null($auth_user) && $auth_user->role == '1') ? true : false;
+            $super_admin_users = (isset($super_admin_flag) && $super_admin_flag) ? User::admin()->pluck('name','id') : [];
+            return view('admin.Pages.Configuration.Users.create', compact('super_admin_flag','super_admin_users'));
+
+        } catch (Exception $exception) {
+
+            return view('errors.error',[
+                'code' => $exception->getCode(),
+                'message' => $exception->getMessage()
+            ]);
+
+        } catch (ModelNotFoundException $model_not_found) {
+
+            return view('errors.error',[
+                'code' => $model_not_found->getCode(),
+                'message' => $model_not_found->getMessage()
+            ]);
+
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  App\Http\Request\Configuration\EndUserRequest  $request
+     * @param  App\Http\Requests\Configuration\EndUserRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(EndUserRequest $request)
     {
-            $this->check_user_count();
+        try {
+
+            $check_total_end_users =$this->check_user_count();
+            if($check_total_end_users) {
+
+                $user               = new User();
+                $user->name         = $request->name;
+                $user->email        = $request->email;
+                $user->admin_id     = (isset($request->super_admin_flag) && $request->super_admin_flag) ? $request->admin_users : Auth::id();
+                $user->role         = '3';
+                $user->login_token  = str_random(64);
+                $user->save();
+
+                return redirect()->route('enduser.index')->with([
+                    'success' => true,
+                    'message' => 'You have created an end user.'
+                ]);
+
+            } else {
+
+                return redirect()->route('enduser.index')->with([
+                    'success' => false,
+                    'message' => 'You have reached your limit of user creation.'
+                ]);
 
 
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            $user->admin_id = Auth::id();
-            $user->role = '3';
-            $user->save();
+            }
 
-            Mail::send('admin.Pages.Configuration.Users.enduserCreate',['email' => $request->email,'password' => $user->password,'name'=>$request->name],
-            function($message) use($request) {
-            $message->from('work@tier5.us','ChatVago');
-            $message->to($request->email)->subject('End user created');
-          });
+        } catch (Exception $exception) {
 
-          dd("Check your email wait 30 minutes before requesting again ");
+            return view('errors.error',[
+                'code' => $exception->getCode(),
+                'message' => $exception->getMessage()
+            ]);
+
+        } catch (ModelNotFoundException $model_not_found) {
+
+            return view('errors.error',[
+                'code' => $model_not_found->getCode(),
+                'message' => $model_not_found->getMessage()
+            ]);
+
+        }
+
     }
 
+    /**
+     * Checks the total end users present under an admin.
+     * @return bool
+     */
     protected function check_user_count()
     {
-        $check = Auth::user()->subscriptions;
-        dd($check);
-        $check_plan = !is_null($check) ? $check->stripe_subscription_plan : [];
-        dd($check_plan);
+        $check = Auth::user()->stripe_subscriptions;
+        $total_users_under_admin = Auth::user()->count_end_users();
+        $check_plan = (!is_null($check) && count($check) > 0) ? $check->stripe_subscription_plan : [];
+        if(count($check_plan) > 0 && $total_users_under_admin > $check_plan->profile_creation) {
+            return false;
+        }
+        return true;
+
+/*
+        Mail::send('admin.Pages.Configuration.Users.enduserCreate',['email' => $request->email,'password' => $user->password,'name'=>$request->name],
+            function($message) use($request) {
+                $message->from('work@tier5.us','ChatVago');
+                $message->to($request->email)->subject('End user created');
+            });*/
+
     }
 
     /**
@@ -137,13 +195,41 @@ class EndUserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\Configuration\EndUserRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EndUserRequest $request, $id)
     {
-        //
+        try {
+
+            $user = User::findOrFail($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->admin_id = Auth::id();
+            $user->role = '3';
+            $user->update();
+
+            return redirect()->route('enduser.index')->with([
+                'success' => true,
+                'message' => 'You have successfully updated the end user details.'
+            ]);
+
+        } catch (Exception $exception) {
+
+            return view('errors.error',[
+                'code' => $exception->getCode(),
+                'message' => $exception->getMessage()
+            ]);
+
+        } catch (ModelNotFoundException $model_not_found) {
+
+            return view('errors.error',[
+                'code' => $model_not_found->getCode(),
+                'message' => $model_not_found->getMessage()
+            ]);
+
+        }
     }
 
     /**

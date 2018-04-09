@@ -83,5 +83,17 @@ class User extends SparkUser
     public function end_users() {
         return $this->check_end_users()->where('role','=','3');
     }
+
+    /**
+     * Returns the total end users present under a user.
+     * @return mixed
+     */
+    public function count_end_users() {
+        return $this->end_users()->count();
+    }
+
+    public function stripe_subscriptions() {
+        return $this->hasOne(StripeSubscription::class);
+    }
     
 }
