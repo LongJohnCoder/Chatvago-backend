@@ -21,7 +21,8 @@ class EndUserController extends Controller
     {
         try{
 
-            $end_users = User::endUsers()->get();
+            $auth_user = Auth::user();
+            $end_users = (!is_null($auth_user) && $auth_user->role == '1') ? User::endUsers()->get() : $auth_user->end_users()->get() ;
             return view('admin.Pages.Configuration.Users.index',compact('end_users'));
 
         } catch (Exception $exception) {
