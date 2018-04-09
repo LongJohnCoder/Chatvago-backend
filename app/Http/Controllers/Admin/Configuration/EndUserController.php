@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Configuration;
 
+use App\StripeSubscriptionPlan;
+
+
 use App\Http\Requests\Configuration\EndUserRequest; 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -21,7 +24,8 @@ class EndUserController extends Controller
     {
         try{
 
-            $end_users = User::endUsers()->get();
+            $auth_user = Auth::user();
+            $end_users = (!is_null($auth_user) && $auth_user->role == '1') ? User::endUsers()->get() : $auth_user->end_users()->get() ;
             return view('admin.Pages.Configuration.Users.index',compact('end_users'));
 
         } catch (Exception $exception) {
@@ -59,6 +63,9 @@ class EndUserController extends Controller
      */
     public function store(EndUserRequest $request)
     {
+            $this->check_user_count();
+
+
             $user = new User();
             $user->name = $request->name;
             $user->email = $request->email;
@@ -74,6 +81,14 @@ class EndUserController extends Controller
           });
 
           dd("Check your email wait 30 minutes before requesting again ");
+    }
+
+    protected function check_user_count()
+    {
+        $check = Auth::user()->subscriptions;
+        dd($check);
+        $check_plan = !is_null($check) ? $check->stripe_subscription_plan : [];
+        dd($check_plan);
     }
 
     /**

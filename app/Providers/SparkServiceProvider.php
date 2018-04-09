@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Laravel\Spark\Spark;
 use Laravel\Spark\Providers\AppServiceProvider as ServiceProvider;
+use App\StripeSubscriptionPlan;
 
 class SparkServiceProvider extends ServiceProvider
 {
@@ -51,8 +52,20 @@ class SparkServiceProvider extends ServiceProvider
     public function booted()
     {
 
-        Spark::useStripe()->noCardUpFront()->trialDays(10);
+        //Spark::useStripe()->noCardUpFront()->trialDays(10);
 
+        Spark::useStripe();
+
+        $all_plans = StripeSubscriptionPlan::all();
+        
+        foreach ($all_plans as $key => $each_plan) {
+            
+            Spark::plan($each_plan->plan_name, $each_plan->plan_id)
+            ->price((double)$each_plan->plan_price)
+            ->features(explode(',', $each_plan->plan_features));
+
+        }
+/*
         Spark::freePlan()
             ->features([
                 'First', 'Second', 'Third'
@@ -70,6 +83,6 @@ class SparkServiceProvider extends ServiceProvider
             ->price(29.99)
             ->features([
                 'First', 'Second', 'Third'
-            ]);
+            ]);*/
     }
 }

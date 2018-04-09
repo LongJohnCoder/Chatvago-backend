@@ -83,4 +83,5 @@ class User extends SparkUser
     public function end_users() {
         return $this->check_end_users()->where('role','=','3');
     }
+    
 }
